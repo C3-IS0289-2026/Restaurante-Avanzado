@@ -1,0 +1,30 @@
+/* Estilos para mapa de mesas (DouCiv) */
+.table-map-page {
+  padding: 2rem;
+}
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.5rem;
+}
+
+.table-item {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.table-item.status-libre {
+  background-color: #e6ffed;
+  border-color: #2ea043;
+}
+
+.table-item.status-ocupada {
+  background-color: #ffeef0;
+  border-color: #da3633;
+}

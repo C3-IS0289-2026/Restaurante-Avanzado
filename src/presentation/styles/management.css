@@ -1,0 +1,31 @@
+/* Estilos para Gestión de menú (juan4298jose) */
+.menu-management-page {
+  padding: 2rem;
+}
+
+.management-layout {
+  display: flex;
+  gap: 2rem;
+}
+
+.list-section {
+  flex: 2;
+}
+
+.form-section {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.dish-form label {
+  display: block;
+  margin-top: 1rem;
+}
+
+.dish-form input, .dish-form select, .dish-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}

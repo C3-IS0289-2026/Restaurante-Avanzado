@@ -1,0 +1,39 @@
+/* Estilos para KDS (juanpaocampo45) */
+.kds-page {
+  background-color: #1a1a1a;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.kds-board {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.kds-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.kds-column h2 {
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 0.5rem;
+}
+
+.order-ticket {
+  background-color: #fff;
+  color: #000;
+  margin: 0.5rem;
+  padding: 1rem;
+  border-radius: 4px;
+}
