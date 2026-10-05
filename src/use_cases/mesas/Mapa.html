@@ -1,14 +1,80 @@
 <!DOCTYPE html>
 <html>
+
 <head>
- <meta charset='utf-8'>
- <meta http-equiv='X-UA-Compatible' content='IE=edge'>
- <title>Mesas</title>
- <meta name='viewport' content='width=device-width, initial-scale=1'>
- <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
- <script src='main.js'></script>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Mesas</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+  <script src='main.js'></script>
 </head>
-<body>
- 
+
+<body style="background-color :#E8E2DA ;">
+
+  <style>
+    .cuadro {
+      width: 250px;
+      height: 450px;
+      background-color: #c9cbac;
+      border: 4px solid #000;
+      margin: 1px;
+    }
+
+    .contenedor {
+      display: flex;
+      align-items: flex-start;
+      gap: 150px;
+      margin: 50px;
+
+    }
+
+    .mapa {
+      display: grid;
+      grid-template-columns: repeat(5, 150px);
+      grid-template-rows: repeat(5, 150px);
+      gap: 10 px;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .mesa {
+
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #c9cbac;
+      margin: 1px;
+      border-radius: 50%;
+    }
+  </style>
+
+  <div class=" contenedor">
+    <figure>
+      <div class=" cuadro"></div>
+      <figcaption></figcaption>
+    </figure>
+    <div class="mapa">
+
+      <div class="mesa">1</div>
+      <div class="mesa">2</div>
+      <div class="mesa">3</div>
+      <div class="mesa">4</div>
+      <div class="mesa">5</div>
+      <div class="mesa">6</div>
+      <div class="mesa">7</div>
+      <div class="mesa">8</div>
+      <div class="mesa">9</div>
+      <div class="mesa">10</div>
+      <div class="mesa">11</div>
+      <div class="mesa">12</div>
+      <div class="mesa">13</div>
+      <div class="mesa">14</div>
+      <div class="mesa">15</div>
+    </div>
+  </div>
 </body>
+
 </html>
