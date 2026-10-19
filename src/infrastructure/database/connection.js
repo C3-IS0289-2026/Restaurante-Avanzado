@@ -1,13 +1,16 @@
 import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pg;
 
 const pool = new Pool({
-  host: 'localhost',
-  port: 5432,
-  database: 'restaurante-avanzado',
-  user: 'postgres',
-  password: '123456789'
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 5432,
+  database: process.env.DB_NAME || 'restaurante-avanzado',
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || '123456789'
 });
 
 // Mensaje de conexión exitosa
