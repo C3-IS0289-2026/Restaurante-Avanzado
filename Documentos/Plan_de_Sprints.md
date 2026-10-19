@@ -2,7 +2,7 @@
 
 Basado en el análisis de complejidad y dependencias, se ha estructurado el proyecto en **5 Sprints** iterativos. Cada sprint contiene entre 8 y 9 tareas atomizadas, asegurando que los **6 estudiantes participen de manera equitativa**, tomando de **1 a 2 tareas por Sprint**.
 
-Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técnica con Bree-zzz en el Sprint 4.
+Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técnica con Bree-zzz1 en el Sprint 4.
 
 ---
 
@@ -18,7 +18,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
 * **juan4298jose:**
   * HU-008.1: Formulario para crear un nuevo platillo con sus campos básicos
   * HU-008.2: Vista de listado de platillos con búsqueda y filtros
-* **Bree-zzz:**
+* **Bree-zzz1:**
   * HU-009.1: Definir estructura de datos de receta e ingredientes
   * HU-009.2: Interfaz para agregar ingredientes a un platillo
 * **David3560:**
@@ -39,7 +39,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
 * **juan4298jose:**
   * HU-008.3: Función para editar precio y descripción de un platillo
   * HU-008.4: Implementar borrado lógico (soft delete) de platillos
-* **Bree-zzz:**
+* **Bree-zzz1:**
   * HU-009.3: Vista de lectura de recetas para el personal de cocina
 * **David3560:**
   * HU-011.2: Tarea programada o trigger que evalúa inventario tras descuentos
@@ -58,7 +58,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
   * HU-006.2: Lógica backend para actualizar estado de la comanda
 * **juan4298jose:**
   * HU-007.1: Sistema base para emitir notificaciones push/web al mesero
-* **Bree-zzz:**
+* **Bree-zzz1:**
   * HU-009.4: Control de porciones y cálculo de costo teórico
   * HU-010.1: Lógica para enlazar comanda con ingredientes de receta
 * **David3560:**
@@ -79,7 +79,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
 * **juan4298jose:**
   * HU-007.2: UI de notificaciones no leídas en la app del mesero
   * HU-007.3: Acción para marcar notificación como leída o entregada
-* **Bree-zzz:**
+* **Bree-zzz1:**
   * HU-010.2: Reducción automática de stock tras confirmación de pedido
 * **David3560:**
   * HU-010.3: Manejo de errores cuando no hay suficiente stock *(Apoyo transversal a Inventario)*
@@ -98,7 +98,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
   * HU-006.4: Validaciones para evitar cambios de estado inválidos
 * **juan4298jose:**
   * HU-007.4: Integración de notificaciones con la vista de mesas
-* **Bree-zzz:**
+* **Bree-zzz1:**
   * HU-010.4: Registro histórico de movimientos de inventario por ventas
 * **David3560:**
   * HU-011.4: Notificación a gerente/compras de stock bajo

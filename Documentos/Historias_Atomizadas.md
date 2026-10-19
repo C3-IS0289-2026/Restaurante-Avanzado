@@ -75,7 +75,7 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-008.4: Implementar borrado lógico (soft delete) de platillos
 
 ## HU-009: Receta de Platillos
-**Asignado a:** @Bree-zzz
+**Asignado a:** @Bree-zzz1
 
 ### Tareas Atomizadas:
 - [ ] HU-009.1: Definir estructura de datos de receta e ingredientes
@@ -84,7 +84,7 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-009.4: Control de porciones y cálculo de costo teórico
 
 ## HU-010: Descuento Automático de Inventario
-**Asignado a:** @Bree-zzz
+**Asignado a:** @Bree-zzz1
 
 ### Tareas Atomizadas:
 - [ ] HU-010.1: Lógica para enlazar comanda con ingredientes de receta
