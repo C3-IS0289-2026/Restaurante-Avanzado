@@ -28,3 +28,71 @@
   background-color: #ffeef0;
   border-color: #da3633;
 }
+
+
+
+
+
+    .cuadro {
+      width: 250px;
+      height: 450px;
+      background-color: #c9cbac;
+      border: 4px solid #000;
+      margin: 1px;
+    }
+
+    .contenedor {
+      display: flex;
+      align-items: flex-start;
+      gap: 150px;
+      margin: 50px;
+
+    }
+
+    .mapa {
+      display: grid;
+      grid-template-columns: repeat(5, 150px);
+      grid-template-rows: repeat(5, 150px);
+      gap: 10 px;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .mesas {
+
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #c9cbac;
+      margin: 2px;
+      border-radius: 50%;
+    
+    }
+    .mesasVacia {
+
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #c9cbac;
+      margin: 2px;
+      border-radius: 50%;
+    
+    }
+    .mesasOcupada {
+
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #b5411e;
+      margin: 2px;
+      border-radius: 50%;
+    
+    }
+    
+
