@@ -6,10 +6,16 @@
 .management-layout {
   display: flex;
   gap: 2rem;
+  border: 4px;
+  border-style: dashed;
+  border-color: red;
 }
 
 .list-section {
   flex: 2;
+  border: 2px;
+border-style: dashed;
+  border-color: black;
 }
 
 .form-section {
