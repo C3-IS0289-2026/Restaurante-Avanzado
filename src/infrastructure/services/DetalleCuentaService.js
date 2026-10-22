@@ -10,7 +10,7 @@ export const ESTADOS_DETALLE_CUENTA = Object.freeze({
 });
 
 /**
- * Servicio de infraestructura para la entidad DetalleCuenta (líneas de pedido/comanda)
+ * Servicio de infraestructura para la entidad DetalleCuenta (líneas de pedido)
  */
 export class DetalleCuentaService extends BaseService {
   constructor(db = defaultPool) {

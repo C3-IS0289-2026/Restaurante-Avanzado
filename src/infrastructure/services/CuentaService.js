@@ -16,7 +16,7 @@ export class CuentaService extends BaseService {
   }
 
   /**
-   * Crea una nueva cuenta (apertura de comanda/servicio para una mesa)
+   * Crea una nueva cuenta (apertura de pedido/servicio para una mesa)
    * @param {Object} params
    * @param {number} params.mesa_id
    * @param {number} [params.mesero_id=null]

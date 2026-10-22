@@ -17,7 +17,7 @@ src/infrastructure/services/
 ├── IngredienteService.js        # CRUD, control de stock atómico y alertas de 'ingrediente'
 ├── RecetaIngredienteService.js  # CRUD y composición de platos de 'receta_ingrediente'
 ├── CuentaService.js             # CRUD, cálculo de totales y cierre de 'cuenta'
-├── DetalleCuentaService.js      # CRUD, comandas y pantalla KDS de 'detalle_cuenta'
+├── DetalleCuentaService.js      # CRUD, pedidos y pantalla KDS de 'detalle_cuenta'
 ├── PagoService.js               # CRUD, métodos de pago y validación de saldo de 'pago'
 ├── MovimientoInventarioService.js # CRUD, kardex y descuento automático de stock de 'movimiento_inventario'
 ├── NotificacionService.js       # CRUD y alertas de cocina / stock mínimo de 'notificacion'
@@ -106,7 +106,7 @@ const miMesaService = new MesaService();
 - `guardarRecetaCompleta(plato_id, items)`: Reemplaza atómicamente en una transacción todos los insumos del plato.
 
 ### 6. `CuentaService` (`cuenta`)
-- `create({ mesa_id, mesero_id, numero_comensales, estado, ... }, client)`: Apertura de comanda/cuenta.
+- `create({ mesa_id, mesero_id, numero_comensales, estado, ... }, client)`: Apertura de pedido/cuenta.
 - `getAll({ estado, mesa_id, mesero_id }, client)`: Listado con join a `mesa` y `usuario`.
 - `getById(id, client)`: Obtiene cabecera de cuenta.
 - `getByMesaId(mesa_id, soloAbiertas = true, client)`: Encuentra la cuenta activa de una mesa.
