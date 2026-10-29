@@ -53,30 +53,38 @@ export class MovimientoInventarioService extends BaseService {
   }
 
   /**
-   * Obtiene movimientos de inventario con filtros y datos del ingrediente
-   * @param {Object} [filters={}]
-   * @param {number} [filters.ingrediente_id]
-   * @param {string} [filters.tipo_movimiento]
-   * @param {number} [filters.cuenta_id]
+   * Obtiene movimientos de inventario con filtros y datos del ingrediente (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {number} [options.ingrediente_id]
+   * @param {string} [options.tipo_movimiento]
+   * @param {number} [options.cuenta_id]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ ingrediente_id, tipo_movimiento, cuenta_id } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'm.fecha_movimiento DESC, m.id DESC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (ingrediente_id) {
+    if (filters.ingrediente_id) {
       clauses.push(`m."ingrediente_id" = $${paramIndex++}`);
-      values.push(ingrediente_id);
+      values.push(filters.ingrediente_id);
     }
-    if (tipo_movimiento) {
+    if (filters.tipo_movimiento) {
       clauses.push(`m."tipo_movimiento" = $${paramIndex++}`);
-      values.push(tipo_movimiento);
+      values.push(filters.tipo_movimiento);
     }
-    if (cuenta_id) {
+    if (filters.cuenta_id) {
       clauses.push(`m."cuenta_id" = $${paramIndex++}`);
-      values.push(cuenta_id);
+      values.push(filters.cuenta_id);
     }
 
     let sql = `
@@ -92,7 +100,17 @@ export class MovimientoInventarioService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY m.fecha_movimiento DESC, m.id DESC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;
@@ -156,7 +174,6 @@ export class MovimientoInventarioService extends BaseService {
   }) {
     return this.transaction(async (client) => {
       const cant = Number(cantidad);
-      // Determinación de signo: 'Ingreso' suma, los demás restan
       const deltaStock = tipo_movimiento === TIPOS_MOVIMIENTO_INVENTARIO.INGRESO ? cant : -cant;
 
       // 1. Actualizar el stock del ingrediente
@@ -202,7 +219,6 @@ export class MovimientoInventarioService extends BaseService {
    */
   async descontarStockPorPlato(plato_id, cantidadPlatos, cuenta_id = null) {
     return this.transaction(async (client) => {
-      // 1. Obtener receta del plato
       const sqlReceta = `
         SELECT r.ingrediente_id, r.cantidad_requerida, i.nombre AS ingrediente_nombre
         FROM "receta_ingrediente" r

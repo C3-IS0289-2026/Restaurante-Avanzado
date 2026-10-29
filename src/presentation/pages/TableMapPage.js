@@ -1,16 +1,16 @@
-export class TableMapPage {
+import { BaseComponent } from '../components/BaseComponent.js';
+
+export class TableMapPage extends BaseComponent {
   constructor() {
-    this.container = document.createElement('div');
-    this.container.className = 'table-map-page';
+    super('div', 'table-map-page');
   }
 
-  render() {
-    this.container.innerHTML = `
+  template() {
+    return `
       <h1>Mapa de Mesas</h1>
       <div class="tables-grid" id="tablesGrid">
         <!-- Renderizar mesas aquí -->
       </div>
     `;
-    return this.container;
   }
 }

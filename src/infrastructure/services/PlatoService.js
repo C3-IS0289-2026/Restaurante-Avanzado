@@ -51,22 +51,27 @@ export class PlatoService extends BaseService {
   }
 
   /**
-   * Obtiene todos los platos con filtro opcional por categoría y estado activo
-   * @param {Object} [filters={}]
-   * @param {string} [filters.categoria]
-   * @param {boolean} [filters.activo]
+   * Obtiene todos los platos con filtro opcional por categoría y estado activo (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {string} [options.categoria]
+   * @param {boolean} [options.activo]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ categoria, activo } = {}, client = null) {
-    const where = {};
-    if (categoria) {
-      where.categoria = categoria;
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'categoria ASC, nombre ASC'
+    );
+    const where = { ...filters };
+    if (where.activo !== undefined && where.activo !== null) {
+      where.activo = Boolean(where.activo);
     }
-    if (activo !== undefined && activo !== null) {
-      where.activo = Boolean(activo);
-    }
-    return super.getAll({ where, orderBy: 'categoria ASC, nombre ASC' }, client);
+    return super.getAll({ where, orderBy, limit, offset }, client);
   }
 
   /**

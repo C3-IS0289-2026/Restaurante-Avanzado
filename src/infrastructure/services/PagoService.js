@@ -50,25 +50,33 @@ export class PagoService extends BaseService {
   }
 
   /**
-   * Obtiene todos los pagos filtrando opcionalmente por cuenta y método
-   * @param {Object} [filters={}]
-   * @param {number} [filters.cuenta_id]
-   * @param {string} [filters.metodo_pago]
+   * Obtiene todos los pagos filtrando opcionalmente por cuenta y método (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {number} [options.cuenta_id]
+   * @param {string} [options.metodo_pago]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ cuenta_id, metodo_pago } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'p.fecha_pago DESC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (cuenta_id) {
+    if (filters.cuenta_id) {
       clauses.push(`p."cuenta_id" = $${paramIndex++}`);
-      values.push(cuenta_id);
+      values.push(filters.cuenta_id);
     }
-    if (metodo_pago) {
+    if (filters.metodo_pago) {
       clauses.push(`p."metodo_pago" = $${paramIndex++}`);
-      values.push(metodo_pago);
+      values.push(filters.metodo_pago);
     }
 
     let sql = `
@@ -85,7 +93,17 @@ export class PagoService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY p.fecha_pago DESC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;
