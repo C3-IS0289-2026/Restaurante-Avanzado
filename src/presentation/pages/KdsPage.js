@@ -1,11 +1,12 @@
-export class KdsPage {
+import { BaseComponent } from '../components/BaseComponent.js';
+
+export class KdsPage extends BaseComponent {
   constructor() {
-    this.container = document.createElement('div');
-    this.container.className = 'kds-page';
+    super('div', 'kds-page');
   }
 
-  render() {
-    this.container.innerHTML = `
+  template() {
+    return `
       <header>
         <h1>Pantalla de Cocina (KDS)</h1>
       </header>
@@ -13,6 +14,5 @@ export class KdsPage {
         <!-- KdsBoard renderizará aquí -->
       </div>
     `;
-    return this.container;
   }
 }

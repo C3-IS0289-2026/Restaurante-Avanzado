@@ -1,11 +1,12 @@
-export class MenuManagementPage {
+import { BaseComponent } from '../components/BaseComponent.js';
+
+export class MenuManagementPage extends BaseComponent {
   constructor() {
-    this.container = document.createElement('div');
-    this.container.className = 'menu-management-page';
+    super('div', 'menu-management-page');
   }
 
-  render() {
-    this.container.innerHTML = `
+  template() {
+    return `
       <h1>Gestión de Menú</h1>
       <div class="management-layout">
         <div class="list-section" id="dishListContainer">
@@ -16,6 +17,5 @@ export class MenuManagementPage {
         </div>
       </div>
     `;
-    return this.container;
   }
 }

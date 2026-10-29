@@ -8,7 +8,8 @@ export const ESTADOS_CUENTA = Object.freeze({
 });
 
 /**
- * Servicio de infraestructura para la entidad Cuenta
+ * Servicio de infraestructura para la entidad Cuenta.
+ * Cumple el contrato ICuentaRepository y LSP con BaseService.
  */
 export class CuentaService extends BaseService {
   constructor(db = defaultPool) {
@@ -65,30 +66,38 @@ export class CuentaService extends BaseService {
   }
 
   /**
-   * Obtiene todas las cuentas con información de la mesa y el mesero
-   * @param {Object} [filters={}]
-   * @param {string} [filters.estado]
-   * @param {number} [filters.mesa_id]
-   * @param {number} [filters.mesero_id]
+   * Obtiene todas las cuentas con información de la mesa y el mesero (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {string} [options.estado]
+   * @param {number} [options.mesa_id]
+   * @param {number} [options.mesero_id]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ estado, mesa_id, mesero_id } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'c.fecha_apertura DESC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (estado) {
+    if (filters.estado) {
       clauses.push(`c."estado" = $${paramIndex++}`);
-      values.push(estado);
+      values.push(filters.estado);
     }
-    if (mesa_id) {
+    if (filters.mesa_id) {
       clauses.push(`c."mesa_id" = $${paramIndex++}`);
-      values.push(mesa_id);
+      values.push(filters.mesa_id);
     }
-    if (mesero_id) {
+    if (filters.mesero_id) {
       clauses.push(`c."mesero_id" = $${paramIndex++}`);
-      values.push(mesero_id);
+      values.push(filters.mesero_id);
     }
 
     let sql = `
@@ -105,7 +114,17 @@ export class CuentaService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY c.fecha_apertura DESC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;

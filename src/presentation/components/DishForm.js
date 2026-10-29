@@ -1,11 +1,12 @@
-export class DishForm {
+import { BaseComponent } from './BaseComponent.js';
+
+export class DishForm extends BaseComponent {
   constructor() {
-    this.element = document.createElement('div');
-    this.element.className = 'dish-form';
+    super('div', 'dish-form');
   }
 
-  render() {
-    this.element.innerHTML = `
+  template() {
+    return `
       <h2>Crear/Editar Platillo</h2>
       <form id="dishForm">
         <label>Nombre:</label>
@@ -27,6 +28,5 @@ export class DishForm {
         <button type="submit">Guardar Platillo</button>
       </form>
     `;
-    return this.element;
   }
 }
