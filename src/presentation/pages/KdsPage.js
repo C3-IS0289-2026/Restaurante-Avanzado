@@ -33,6 +33,9 @@ export class KdsPage extends BaseComponent {
 
   afterRender() {
     // Un solo listener para todos los botones de los tickets
+    // Fuera del navegador (por ejemplo en las pruebas con node) solo se dibuja la página
+    if (typeof this.element.addEventListener !== 'function') return;
+
     this.element.addEventListener('click', evento => {
       const boton = evento.target.closest('.kds-btn');
       if (boton) this.avanzar(boton.dataset.id, boton);
