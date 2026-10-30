@@ -87,7 +87,7 @@ flowchart TD
 
 ## Sprint 2 & 3: Lógica Backend, Toma de Pedidos, KDS
 
-### HU-003: Toma de Pedidos (Comanda)
+### HU-003: Toma de Pedidos (Detalle de Cuenta)
 ```mermaid
 sequenceDiagram
     actor Mesero
@@ -101,13 +101,13 @@ sequenceDiagram
     UI->>UI: Actualiza carrito
     Mesero->>UI: Agrega notas o modificaciones al platillo
     UI->>UI: Guarda notas en carrito local
-    Mesero->>UI: Confirma y envía comanda
-    UI->>Backend: Envía detalles de comanda
+    Mesero->>UI: Confirma y envía pedido a la cuenta
+    UI->>Backend: Envía detalles de cuenta (detalle_cuenta)
     Backend-->>UI: Confirma recepción
-    Backend->>KDS: Emite nueva comanda en tiempo real
+    Backend->>KDS: Emite nueva solicitud en tiempo real
 ```
 
-### HU-005: Pantalla de Recepción de Comandas (KDS)
+### HU-005: Pantalla de Recepción de Pedidos / Detalles de Cuenta (KDS)
 ```mermaid
 sequenceDiagram
     actor Cocinero
@@ -116,15 +116,15 @@ sequenceDiagram
 
     Cocinero->>KDS: Accede a la vista KDS (Estructura de Columnas)
     KDS->>Backend: Conecta al flujo de tiempo real (WebSocket)
-    Backend-->>KDS: Envía comandas pendientes
-    loop Recepción de Comandas
-        Backend->>KDS: Notifica nueva comanda
+    Backend-->>KDS: Envía detalles de cuenta pendientes
+    loop Recepción de Solicitudes
+        Backend->>KDS: Notifica nuevo detalle de cuenta
         KDS->>KDS: Ordena tickets por tiempo de espera
         KDS-->>Cocinero: Muestra nuevo ticket con detalles y notas del cliente
     end
 ```
 
-### HU-006: Actualización de Estado de Preparación
+### HU-006: Actualización de Estado de Preparación (`estado_detalle_cuenta`)
 ```mermaid
 sequenceDiagram
     actor Cocinero
@@ -136,7 +136,7 @@ sequenceDiagram
     KDS->>Backend: Solicita cambio de estado
     Backend->>BD: Valida transición (evitar cambios inválidos)
     BD-->>Backend: Validación OK
-    Backend->>BD: Actualiza estado de la comanda
+    Backend->>BD: Actualiza estado_detalle_cuenta en detalle_cuenta
     Backend-->>KDS: Refleja cambio de estado en tiempo real
     KDS-->>Cocinero: Mueve ticket a columna "En Preparación"
     
@@ -180,7 +180,7 @@ sequenceDiagram
     participant UI as App Mesero
     actor Mesero
 
-    Backend->>NotifService: Evento: Comanda marcada como "Listo"
+    Backend->>NotifService: Evento: Detalle de cuenta marcado como "Listo para Servir"
     NotifService->>UI: Envía notificación push/web al mesero asignado
     UI-->>Mesero: Muestra indicador de notificaciones no leídas (Vista de Mesas)
     Mesero->>UI: Abre panel de notificaciones
@@ -196,16 +196,16 @@ sequenceDiagram
     participant Backend
     participant BD as Base de Datos (Inventario)
 
-    UI->>Backend: Mesero confirma nueva comanda
-    Backend->>BD: Enlaza comanda con ingredientes de receta
+    UI->>Backend: Mesero confirma nuevo pedido en la cuenta
+    Backend->>BD: Enlaza cuenta / detalle de cuenta con ingredientes de receta
     Backend->>BD: Calcula reducción de stock (Control de porciones)
     alt Stock Insuficiente
         BD-->>Backend: Error: Sin stock suficiente
         Backend-->>UI: Retorna manejo de error a UI (No se puede pedir)
     else Stock Suficiente
         BD-->>Backend: Reducción exitosa
-        Backend->>BD: Guarda registro histórico de movimientos por venta
-        Backend-->>UI: Comanda procesada con éxito
+        Backend->>BD: Guarda registro histórico de movimientos por venta (cuenta_id)
+        Backend-->>UI: Pedido procesado con éxito
     end
 ```
 

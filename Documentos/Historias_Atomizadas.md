@@ -20,14 +20,14 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-002.3: Validación de mesa ya ocupada
 - [ ] HU-002.4: Integración del cambio de estado en el mapa de mesas al abrir
 
-## HU-003: Toma de Pedidos (Comanda)
+## HU-003: Toma de Pedidos (Detalle de Cuenta)
 **Asignado a:** @DiaxJF
 
 ### Tareas Atomizadas:
 - [ ] HU-003.1: Interfaz para seleccionar platillos del menú por categorías
 - [ ] HU-003.2: Lógica de carrito de compras (agregar/quitar platillos)
 - [ ] HU-003.3: Capacidad para agregar notas o modificaciones a platillos
-- [ ] HU-003.4: Envío de la comanda al backend y KDS
+- [ ] HU-003.4: Envío del detalle de cuenta (solicitud) al backend y KDS
 
 ## HU-004: Cierre de Cuenta y Pago
 **Asignado a:** @DiaxJF
@@ -38,21 +38,21 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-004.3: Registro de método de pago (Efectivo, Tarjeta, etc.)
 - [ ] HU-004.4: Lógica de liberación de la mesa tras pago exitoso
 
-## HU-005: Pantalla de Recepción de Comandas (KDS)
+## HU-005: Pantalla de Recepción de Pedidos / Detalles de Cuenta (KDS)
 **Asignado a:** @juanpaocampo45
 
 ### Tareas Atomizadas:
 - [ ] HU-005.1: Estructura de la vista KDS (Columnas por estado)
-- [ ] HU-005.2: Recepción en tiempo real de nuevas comandas
+- [ ] HU-005.2: Recepción en tiempo real de nuevas solicitudes de cuenta
 - [ ] HU-005.3: Mostrar detalles del pedido y notas del cliente
 - [ ] HU-005.4: Ordenar tickets por tiempo de espera
 
-## HU-006: Actualización de Estado de Preparación
+## HU-006: Actualización de Estado de Preparación (`estado_detalle_cuenta`)
 **Asignado a:** @juanpaocampo45
 
 ### Tareas Atomizadas:
 - [ ] HU-006.1: Botones para cambiar estado a "En Preparación" y "Listo"
-- [ ] HU-006.2: Lógica backend para actualizar estado de la comanda
+- [ ] HU-006.2: Lógica backend para actualizar estado del detalle de cuenta (`estado_detalle_cuenta`)
 - [ ] HU-006.3: Reflejar cambio de estado en pantalla KDS en tiempo real
 - [ ] HU-006.4: Validaciones para evitar cambios de estado inválidos
 
@@ -75,7 +75,7 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-008.4: Implementar borrado lógico (soft delete) de platillos
 
 ## HU-009: Receta de Platillos
-**Asignado a:** @Bree-zzz
+**Asignado a:** @Bree-zzz1
 
 ### Tareas Atomizadas:
 - [ ] HU-009.1: Definir estructura de datos de receta e ingredientes
@@ -84,10 +84,10 @@ A continuación se presenta el listado de Historias de Usuario reestructuradas, 
 - [ ] HU-009.4: Control de porciones y cálculo de costo teórico
 
 ## HU-010: Descuento Automático de Inventario
-**Asignado a:** @Bree-zzz
+**Asignado a:** @Bree-zzz1
 
 ### Tareas Atomizadas:
-- [ ] HU-010.1: Lógica para enlazar comanda con ingredientes de receta
+- [ ] HU-010.1: Lógica para enlazar cuenta / detalle de cuenta con ingredientes de receta
 - [ ] HU-010.2: Reducción automática de stock tras confirmación de pedido
 - [ ] HU-010.3: Manejo de errores cuando no hay suficiente stock
 - [ ] HU-010.4: Registro histórico de movimientos de inventario por ventas

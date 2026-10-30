@@ -1,11 +1,12 @@
-export class KdsBoard {
+import { BaseComponent } from './BaseComponent.js';
+
+export class KdsBoard extends BaseComponent {
   constructor() {
-    this.element = document.createElement('div');
-    this.element.className = 'kds-board';
+    super('div', 'kds-board');
   }
 
-  render() {
-    this.element.innerHTML = `
+  template() {
+    return `
       <div class="kds-column" id="col-recibidos">
         <h2>Recibidos</h2>
         <div class="kds-column-content"></div>
@@ -19,6 +20,5 @@ export class KdsBoard {
         <div class="kds-column-content"></div>
       </div>
     `;
-    return this.element;
   }
 }
