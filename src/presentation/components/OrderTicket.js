@@ -1,18 +1,18 @@
-export class OrderTicket {
-  constructor({ orderId, table, time, items }) {
+import { BaseComponent } from './BaseComponent.js';
+
+export class OrderTicket extends BaseComponent {
+  constructor({ orderId, table, time, items } = {}) {
+    super('div', 'order-ticket');
     this.orderId = orderId;
     this.table = table;
     this.time = time;
     this.items = items || [];
-    this.element = document.createElement('div');
   }
 
-  render() {
-    this.element.className = 'order-ticket';
-    
+  template() {
     const itemsHtml = this.items.map(item => `<li>${item.quantity}x ${item.name}</li>`).join('');
 
-    this.element.innerHTML = `
+    return `
       <div class="ticket-header">
         <span>Mesa ${this.table}</span>
         <span>${this.time}</span>
@@ -24,6 +24,5 @@ export class OrderTicket {
         <button>Avanzar</button>
       </div>
     `;
-    return this.element;
   }
 }

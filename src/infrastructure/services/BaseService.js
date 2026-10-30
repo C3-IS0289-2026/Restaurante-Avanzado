@@ -1,19 +1,47 @@
 import defaultPool from '../database/connection.js';
+import { IRepository } from '../../domain/repositories/contracts.js';
+import { ValidationError } from '../../domain/exceptions/DomainErrors.js';
 
 /**
- * Servicio Base para operaciones CRUD genéricas contra PostgreSQL
+ * Servicio Base para operaciones CRUD genéricas contra PostgreSQL.
+ * Implementa el contrato IRepository (DDD + SOLID LSP / DIP).
  */
-export class BaseService {
+export class BaseService extends IRepository {
   /**
    * @param {string} tableName - Nombre de la tabla en PostgreSQL
    * @param {import('pg').Pool} [db=defaultPool] - Instancia del pool de PostgreSQL
    */
   constructor(tableName, db = defaultPool) {
+    super();
     if (!tableName) {
-      throw new Error('El nombre de la tabla es obligatorio para BaseService');
+      throw new ValidationError('El nombre de la tabla es obligatorio para BaseService');
     }
     this.tableName = tableName;
     this.db = db;
+  }
+
+  /**
+   * Normaliza opciones de consulta para garantizar el Principio de Sustitución de Liskov (LSP)
+   * entre BaseService.getAll({ where, orderBy, limit, offset }) y los filtros directos de las subclases.
+   * @param {Object} [options={}]
+   * @param {string} [defaultOrderBy='id ASC']
+   * @returns {{ filters: Object, orderBy: string, limit: number|null, offset: number|null }}
+   */
+  normalizeQueryOptions(options = {}, defaultOrderBy = 'id ASC') {
+    const {
+      where = {},
+      orderBy = defaultOrderBy,
+      limit = null,
+      offset = null,
+      ...directFilters
+    } = options || {};
+
+    return {
+      filters: { ...directFilters, ...(where || {}) },
+      orderBy,
+      limit: limit !== null && limit !== undefined ? Number(limit) : null,
+      offset: offset !== null && offset !== undefined ? Number(offset) : null
+    };
   }
 
   /**
@@ -59,12 +87,13 @@ export class BaseService {
    * @param {import('pg').PoolClient} [client=null] - Cliente opcional
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ where = {}, orderBy = 'id ASC', limit = null, offset = null } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(options, 'id ASC');
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    for (const [key, value] of Object.entries(where)) {
+    for (const [key, value] of Object.entries(filters)) {
       if (value !== undefined && value !== null) {
         clauses.push(`"${key}" = $${paramIndex++}`);
         values.push(value);
@@ -115,7 +144,7 @@ export class BaseService {
   async create(data, client = null) {
     const entries = Object.entries(data).filter(([key, val]) => key !== 'id' && val !== undefined);
     if (entries.length === 0) {
-      throw new Error(`No se proporcionaron datos para crear registro en ${this.tableName}`);
+      throw new ValidationError(`No se proporcionaron datos para crear registro en ${this.tableName}`);
     }
 
     const columns = entries.map(([key]) => `"${key}"`).join(', ');

@@ -1,14 +1,13 @@
-export class DishList {
-  constructor({ dishes }) {
+import { BaseComponent } from './BaseComponent.js';
+
+export class DishList extends BaseComponent {
+  constructor({ dishes } = {}) {
+    super('div', 'dish-list');
     this.dishes = dishes || [];
-    this.element = document.createElement('div');
   }
 
-  render() {
-    this.element.className = 'dish-list';
-    
-    // Tabla básica
-    this.element.innerHTML = `
+  template() {
+    return `
       <div class="filters">
         <input type="text" placeholder="Buscar platillo...">
       </div>
@@ -26,6 +25,5 @@ export class DishList {
         </tbody>
       </table>
     `;
-    return this.element;
   }
 }

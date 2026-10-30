@@ -10,7 +10,8 @@ export const ESTADOS_DETALLE_CUENTA = Object.freeze({
 });
 
 /**
- * Servicio de infraestructura para la entidad DetalleCuenta (líneas de pedido/comanda)
+ * Servicio de infraestructura para la entidad DetalleCuenta (líneas de pedido).
+ * Cumple el contrato ISolicitudRepository y LSP con BaseService.
  */
 export class DetalleCuentaService extends BaseService {
   constructor(db = defaultPool) {
@@ -59,30 +60,38 @@ export class DetalleCuentaService extends BaseService {
   }
 
   /**
-   * Obtiene detalles de cuenta filtrados, incluyendo datos del plato
-   * @param {Object} [filters={}]
-   * @param {number} [filters.cuenta_id]
-   * @param {number} [filters.plato_id]
-   * @param {string} [filters.estado]
+   * Obtiene detalles de cuenta filtrados, incluyendo datos del plato (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {number} [options.cuenta_id]
+   * @param {number} [options.plato_id]
+   * @param {string} [options.estado]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ cuenta_id, plato_id, estado } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'dc.hora_envio ASC, dc.id ASC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (cuenta_id) {
+    if (filters.cuenta_id) {
       clauses.push(`dc."cuenta_id" = $${paramIndex++}`);
-      values.push(cuenta_id);
+      values.push(filters.cuenta_id);
     }
-    if (plato_id) {
+    if (filters.plato_id) {
       clauses.push(`dc."plato_id" = $${paramIndex++}`);
-      values.push(plato_id);
+      values.push(filters.plato_id);
     }
-    if (estado) {
+    if (filters.estado) {
       clauses.push(`dc."estado" = $${paramIndex++}`);
-      values.push(estado);
+      values.push(filters.estado);
     }
 
     let sql = `
@@ -99,7 +108,17 @@ export class DetalleCuentaService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY dc.hora_envio ASC, dc.id ASC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;
@@ -169,9 +188,11 @@ export class DetalleCuentaService extends BaseService {
         dc.estado,
         dc.hora_envio,
         p.nombre AS plato_nombre,
+        p.precio AS plato_precio,
         p.categoria AS plato_categoria,
         m.numero AS mesa_numero,
-        u.nombre AS mesero_nombre
+        u.nombre AS mesero_nombre,
+        c.mesero_id AS mesero_id
       FROM "detalle_cuenta" dc
       JOIN "plato" p ON dc.plato_id = p.id
       JOIN "cuenta" c ON dc.cuenta_id = c.id

@@ -1,11 +1,12 @@
-export class TableOpenModal {
+import { BaseComponent } from './BaseComponent.js';
+
+export class TableOpenModal extends BaseComponent {
   constructor() {
-    this.element = document.createElement('div');
-    this.element.className = 'modal table-open-modal';
+    super('div', 'modal table-open-modal');
   }
 
-  render() {
-    this.element.innerHTML = `
+  template() {
+    return `
       <div class="modal-content">
         <h2>Abrir Mesa</h2>
         <form id="openTableForm">
@@ -17,6 +18,5 @@ export class TableOpenModal {
         </form>
       </div>
     `;
-    return this.element;
   }
 }

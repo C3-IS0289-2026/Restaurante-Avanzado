@@ -10,10 +10,29 @@ export const ROLES_USUARIO = Object.freeze({
 
 /**
  * Servicio de infraestructura para la entidad Usuario
+ * Cumple LSP manteniendo compatibilidad de firmas con BaseService
  */
 export class UsuarioService extends BaseService {
   constructor(db = defaultPool) {
     super('usuario', db);
+  }
+
+  /**
+   * Resuelve argumentos polimórficos para mantener LSP con BaseService.getById(id, client)
+   * y a la vez soportar la bandera opcional includePassword.
+   * @private
+   */
+  _resolvePasswordAndClient(secondArg, thirdArg) {
+    if (typeof secondArg === 'boolean') {
+      return { includePassword: secondArg, client: thirdArg };
+    }
+    if (secondArg && typeof secondArg === 'object' && 'includePassword' in secondArg) {
+      return {
+        includePassword: Boolean(secondArg.includePassword),
+        client: secondArg.client || thirdArg
+      };
+    }
+    return { includePassword: false, client: secondArg };
   }
 
   /**
@@ -55,45 +74,61 @@ export class UsuarioService extends BaseService {
   }
 
   /**
-   * Obtiene todos los usuarios filtrando opcionalmente por rol y estado activo
-   * @param {Object} [filters={}]
-   * @param {string} [filters.rol]
-   * @param {boolean} [filters.activo]
+   * Obtiene todos los usuarios filtrando opcionalmente por rol, estado activo o cláusulas where (LSP)
+   * @param {Object} [options={}]
+   * @param {string} [options.rol]
+   * @param {boolean} [options.activo]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ rol, activo } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(options, 'id ASC');
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (rol) {
+    if (filters.rol) {
       clauses.push(`"rol" = $${paramIndex++}`);
-      values.push(rol);
+      values.push(filters.rol);
     }
-    if (activo !== undefined && activo !== null) {
+    if (filters.activo !== undefined && filters.activo !== null) {
       clauses.push(`"activo" = $${paramIndex++}`);
-      values.push(Boolean(activo));
+      values.push(Boolean(filters.activo));
     }
 
     let sql = 'SELECT id, nombre, rol, credenciales_email, activo FROM "usuario"';
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY id ASC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;
   }
 
   /**
-   * Obtiene un usuario por ID
+   * Obtiene un usuario por ID respetando LSP con BaseService.getById(id, client)
    * @param {number|string} id
-   * @param {boolean} [includePassword=false]
-   * @param {import('pg').PoolClient} [client=null]
+   * @param {import('pg').PoolClient|boolean|Object} [clientOrIncludePassword=null]
+   * @param {import('pg').PoolClient} [maybeClient=null]
    * @returns {Promise<Object|null>}
    */
-  async getById(id, includePassword = false, client = null) {
+  async getById(id, clientOrIncludePassword = null, maybeClient = null) {
+    const { includePassword, client } = this._resolvePasswordAndClient(clientOrIncludePassword, maybeClient);
     const fields = includePassword
       ? '*'
       : 'id, nombre, rol, credenciales_email, activo';
@@ -105,11 +140,12 @@ export class UsuarioService extends BaseService {
   /**
    * Obtiene un usuario por su email
    * @param {string} email
-   * @param {boolean} [includePassword=false]
-   * @param {import('pg').PoolClient} [client=null]
+   * @param {import('pg').PoolClient|boolean|Object} [clientOrIncludePassword=null]
+   * @param {import('pg').PoolClient} [maybeClient=null]
    * @returns {Promise<Object|null>}
    */
-  async getByEmail(email, includePassword = false, client = null) {
+  async getByEmail(email, clientOrIncludePassword = null, maybeClient = null) {
+    const { includePassword, client } = this._resolvePasswordAndClient(clientOrIncludePassword, maybeClient);
     const fields = includePassword
       ? '*'
       : 'id, nombre, rol, credenciales_email, activo';
