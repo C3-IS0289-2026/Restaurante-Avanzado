@@ -2,11 +2,61 @@
 .kds-page {
   background-color: #1a1a1a;
   color: #fff;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: system-ui, sans-serif;
 }
 
+/* Encabezado con resumen */
+.kds-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background-color: #111;
+  border-bottom: 1px solid #333;
+}
+
+.kds-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.kds-resumen {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.kds-resumen-demoradas {
+  color: #ff6b6b;
+}
+
+.kds-actualizado {
+  color: #888;
+}
+
+/* Mensajes de éxito o error */
+.kds-mensaje {
+  margin: 1rem 1rem 0;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+}
+
+.kds-mensaje--ok {
+  background-color: #1e4620;
+  color: #b9f6ca;
+}
+
+.kds-mensaje--error {
+  background-color: #5c1a1a;
+  color: #ffcdd2;
+}
+
+/* Tablero y columnas */
 .kds-board {
   display: flex;
   flex: 1;
@@ -17,23 +67,114 @@
 
 .kds-column {
   flex: 1;
-  min-width: 300px;
+  min-width: 280px;
   background-color: #2a2a2a;
   border-radius: 8px;
+  border-top: 5px solid #888;
   display: flex;
   flex-direction: column;
 }
 
+.kds-column--recibidos   { border-top-color: #4dabf7; }
+.kds-column--preparacion { border-top-color: #ffa94d; }
+.kds-column--listos      { border-top-color: #51cf66; }
+
 .kds-column h2 {
   text-align: center;
+  margin: 0;
+  padding: 0.8rem;
   border-bottom: 2px solid #333;
-  padding-bottom: 0.5rem;
+  font-size: 1.2rem;
 }
 
-.order-ticket {
+.kds-contador {
+  background-color: #444;
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.kds-column-content {
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+.kds-vacio {
+  text-align: center;
+  color: #777;
+}
+
+/* Ticket de cada pedido */
+.kds-ticket-card {
   background-color: #fff;
-  color: #000;
-  margin: 0.5rem;
-  padding: 1rem;
+  color: #222;
+  margin: 0.5rem 0;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  border-left: 6px solid transparent;
+}
+
+.kds-ticket--demorado {
+  border-left-color: #e03131;
+  background-color: #fff5f5;
+}
+
+.kds-ticket-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.kds-mesa {
+  font-size: 1.1rem;
+}
+
+.kds-ticket--demorado .kds-tiempo {
+  color: #e03131;
+}
+
+.kds-plato {
+  font-size: 1.05rem;
+  margin: 0.5rem 0;
+}
+
+.kds-notas {
+  background-color: #fff3bf;
+  padding: 0.4rem 0.6rem;
   border-radius: 4px;
+  margin: 0.4rem 0;
+}
+
+.kds-info {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0.4rem 0;
+}
+
+.kds-btn {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #222;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.kds-btn:hover {
+  background-color: #444;
+}
+
+.kds-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.kds-esperando {
+  text-align: center;
+  color: #2b8a3e;
+  font-weight: bold;
+  margin: 0.3rem 0 0;
 }
