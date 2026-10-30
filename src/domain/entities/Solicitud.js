@@ -1,6 +1,6 @@
 /**
- * Entidad de Dominio: Solicitud (Línea de pedido / Comanda en cocina)
- * Representa una solicitud de preparación de platillo y su ciclo de vida en cocina.
+ * Entidad de Dominio: Solicitud / DetalleCuenta (Línea de pedido asociada a una Cuenta)
+ * Representa un ítem de consumo dentro de una cuenta (`detalle_cuenta`) y su ciclo de vida en cocina (`estado_detalle_cuenta`).
  * Implementa DDD (Entidad rica + Value Objects + Excepciones de Dominio) y POO (Herencia, Encapsulamiento).
  */
 
@@ -9,13 +9,14 @@ import { ValidationError } from '../exceptions/DomainErrors.js';
 import {
   EstadoSolicitud,
   ESTADOS_SOLICITUD,
+  ESTADOS_DETALLE_CUENTA,
   TRANSICIONES_PERMITIDAS,
   SECUENCIA_PASO
 } from '../value-objects/EstadoSolicitud.js';
 import { Cantidad } from '../value-objects/Cantidad.js';
 import { Money } from '../value-objects/Money.js';
 
-export { ESTADOS_SOLICITUD, TRANSICIONES_PERMITIDAS, SECUENCIA_PASO };
+export { ESTADOS_SOLICITUD, ESTADOS_DETALLE_CUENTA, TRANSICIONES_PERMITIDAS, SECUENCIA_PASO };
 
 export class Solicitud extends Entity {
   /**
@@ -248,4 +249,5 @@ export class Solicitud extends Entity {
   }
 }
 
+export const DetalleCuenta = Solicitud;
 export default Solicitud;

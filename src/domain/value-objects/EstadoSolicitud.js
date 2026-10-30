@@ -1,5 +1,8 @@
 import { ValidationError, InvalidStateTransitionError } from '../exceptions/DomainErrors.js';
 
+/**
+ * Enumerador de estados del detalle de cuenta en cocina (Lenguaje Ubicuo: estado_detalle_cuenta)
+ */
 export const ESTADOS_SOLICITUD = Object.freeze({
   ENVIADO_A_COCINA: 'Enviado a Cocina',
   EN_PREPARACION: 'En Preparación',
@@ -7,6 +10,8 @@ export const ESTADOS_SOLICITUD = Object.freeze({
   ENTREGADO: 'Entregado',
   CANCELADO: 'Cancelado'
 });
+
+export const ESTADOS_DETALLE_CUENTA = ESTADOS_SOLICITUD;
 
 /**
  * Matriz de transiciones permitidas según las reglas de negocio (Máquina de Estados)
@@ -157,4 +162,5 @@ export class EstadoSolicitud {
   }
 }
 
+export const EstadoDetalleCuenta = EstadoSolicitud;
 export default EstadoSolicitud;

@@ -970,11 +970,11 @@ ALTER TABLE ONLY public.detalle_cuenta
 
 --
 -- TOC entry 4059 (class 2606 OID 58406)
--- Name: movimiento_inventario movimiento_inventario_comanda_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: movimiento_inventario movimiento_inventario_cuenta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.movimiento_inventario
-    ADD CONSTRAINT movimiento_inventario_comanda_id_fkey FOREIGN KEY (cuenta_id) REFERENCES public.cuenta(id) ON DELETE SET NULL;
+    ADD CONSTRAINT movimiento_inventario_cuenta_id_fkey FOREIGN KEY (cuenta_id) REFERENCES public.cuenta(id) ON DELETE SET NULL;
 
 
 --
@@ -997,11 +997,11 @@ ALTER TABLE ONLY public.notificacion
 
 --
 -- TOC entry 4058 (class 2606 OID 58388)
--- Name: pago pago_comanda_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: pago pago_cuenta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pago
-    ADD CONSTRAINT pago_comanda_id_fkey FOREIGN KEY (cuenta_id) REFERENCES public.cuenta(id) ON DELETE RESTRICT;
+    ADD CONSTRAINT pago_cuenta_id_fkey FOREIGN KEY (cuenta_id) REFERENCES public.cuenta(id) ON DELETE RESTRICT;
 
 
 --
@@ -1015,11 +1015,11 @@ ALTER TABLE ONLY public.receta_ingrediente
 
 --
 -- TOC entry 4053 (class 2606 OID 58327)
--- Name: receta_ingrediente receta_ingrediente_platillo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: receta_ingrediente receta_ingrediente_plato_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.receta_ingrediente
-    ADD CONSTRAINT receta_ingrediente_platillo_id_fkey FOREIGN KEY (plato_id) REFERENCES public.plato(id) ON DELETE CASCADE;
+    ADD CONSTRAINT receta_ingrediente_plato_id_fkey FOREIGN KEY (plato_id) REFERENCES public.plato(id) ON DELETE CASCADE;
 
 
 -- Completed on 2026-10-19 16:50:35 -05

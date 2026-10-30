@@ -429,17 +429,24 @@
 │   │       ├── ConsultarKdsSolicitudesUseCase.js
 │   │       ├── CrearSolicitudUseCase.js
 │   │       └── PasoSolicitudUseCase.js
-│   ├── core
-│   │   ├── entities
-│   │   ├── exceptions
-│   │   ├── repositories
-│   │   └── value_objects
 │   ├── domain
-│   │   └── entities
-│   │       ├── Ingredient.js
-│   │       ├── InventoryItem.js
-│   │       ├── Recipe.js
-│   │       └── Solicitud.js
+│   │   ├── entities
+│   │   │   ├── Cuenta.js
+│   │   │   ├── Entity.js
+│   │   │   ├── Ingredient.js
+│   │   │   ├── InventoryItem.js
+│   │   │   ├── Recipe.js
+│   │   │   └── Solicitud.js
+│   │   ├── exceptions
+│   │   │   └── DomainErrors.js
+│   │   ├── repositories
+│   │   │   └── contracts.js
+│   │   └── value-objects
+│   │       ├── Cantidad.js
+│   │       ├── EstadoCuenta.js
+│   │       ├── EstadoSolicitud.js
+│   │       ├── index.js
+│   │       └── Money.js
 │   ├── infrastructure
 │   │   ├── api
 │   │   │   ├── routes
@@ -489,7 +496,7 @@
 │   │   │   └── tables.css
 │   │   └── utils
 │   └── use_cases
-│       ├── comandas
+│       ├── cuentas
 │       ├── inventario
 │       ├── menu
 │       └── mesas
