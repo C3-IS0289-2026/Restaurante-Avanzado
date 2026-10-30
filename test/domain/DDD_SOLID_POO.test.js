@@ -7,8 +7,9 @@ import { Entity } from '../../src/domain/entities/Entity.js';
 import { Ingredient } from '../../src/domain/entities/Ingredient.js';
 import { InventoryItem } from '../../src/domain/entities/InventoryItem.js';
 import { Recipe } from '../../src/domain/entities/Recipe.js';
-import { Solicitud, ESTADOS_SOLICITUD } from '../../src/domain/entities/Solicitud.js';
-import { EstadoSolicitud, Cantidad, Money } from '../../src/domain/value-objects/index.js';
+import { Cuenta, ESTADOS_CUENTA } from '../../src/domain/entities/Cuenta.js';
+import { Solicitud, DetalleCuenta, ESTADOS_SOLICITUD, ESTADOS_DETALLE_CUENTA } from '../../src/domain/entities/Solicitud.js';
+import { EstadoSolicitud, EstadoDetalleCuenta, EstadoCuenta, Cantidad, Money } from '../../src/domain/value-objects/index.js';
 import {
   DomainError,
   ValidationError,
@@ -132,6 +133,18 @@ test('DDD & POO - Abstracción e Identidad de Entidades (Entity, Ingredient, Inv
   const reqs = recipe.calculateRequirementsForPortions(3);
   assert.equal(reqs[0].requiredQuantity, 450);
   assert.equal(reqs[1].requiredQuantity, 150);
+
+  // Entidad Cuenta y Lenguaje Ubicuo (cuenta / detalle_cuenta / estado_detalle_cuenta)
+  const cuenta = new Cuenta({ id: 10, mesa_id: 2, numero_comensales: 4 });
+  assert.equal(cuenta.estado, ESTADOS_CUENTA.ABIERTA);
+  cuenta.marcarPagada();
+  assert.equal(cuenta.estado, ESTADOS_CUENTA.PAGADA);
+  cuenta.cerrar();
+  assert.equal(cuenta.estado, ESTADOS_CUENTA.CERRADA);
+  assert.ok(cuenta.fecha_cierre instanceof Date);
+  assert.equal(DetalleCuenta, Solicitud);
+  assert.equal(EstadoDetalleCuenta, EstadoSolicitud);
+  assert.equal(ESTADOS_DETALLE_CUENTA, ESTADOS_SOLICITUD);
 });
 
 test('SOLID - Polimorfismo de Excepciones de Dominio (OCP) y Sustitución de Liskov (LSP)', async () => {
