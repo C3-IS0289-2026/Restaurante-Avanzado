@@ -4,95 +4,67 @@
 }
 
 .tables-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1.5rem;
+  display: block;
 }
 
-.table-item {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
+
+
+.cuadro {
+  width: 250px;
+  height: 350px;
+  background-color: #c9cbac;
+  border: 4px solid #000;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  gap: 15px;
 }
 
-.table-item.status-libre {
-  background-color: #e6ffed;
-  border-color: #2ea043;
+.contenedor {
+  display: flex;
+  align-items: flex-start;
+  gap: 150px;
+  margin: 50px;
 }
 
-.table-item.status-ocupada {
-  background-color: #ffeef0;
-  border-color: #da3633;
+.contenedor figure {
+  margin: 0;
+}
+
+.mapa {
+  display: grid;
+  grid-template-columns: repeat(5, 150px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 10px;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.mesas {
+
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c9cbac;
+  margin: 2px;
+  border-radius: 50%;
+
 }
 
 
 
+.mesasLibre {
 
+  background-color: #c9cbac;
+}
 
-    .cuadro {
-      width: 250px;
-      height: 450px;
-      background-color: #c9cbac;
-      border: 4px solid #000;
-      margin: 1px;
-    }
+.mesasOcupada {
 
-    .contenedor {
-      display: flex;
-      align-items: flex-start;
-      gap: 150px;
-      margin: 50px;
+  background-color: #852e14;
 
-    }
-
-    .mapa {
-      display: grid;
-      grid-template-columns: repeat(5, 150px);
-      grid-template-rows: repeat(5, 150px);
-      gap: 10 px;
-      justify-content: center;
-      margin-top: 50px;
-    }
-
-    .mesas {
-
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #c9cbac;
-      margin: 2px;
-      border-radius: 50%;
-    
-    }
-    .mesasVacia {
-
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #c9cbac;
-      margin: 2px;
-      border-radius: 50%;
-    
-    }
-    .mesasOcupada {
-
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #b5411e;
-      margin: 2px;
-      border-radius: 50%;
-    
-    }
-    
-
+}
