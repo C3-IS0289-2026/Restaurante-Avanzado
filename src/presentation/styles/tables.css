@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #c9cbac;
+  background-color: #ededed;
   margin: 2px;
   border-radius: 50%;
 
@@ -60,7 +60,7 @@
 
 .mesasLibre {
 
-  background-color: #c9cbac;
+  background-color: #c2e1de;
 }
 
 .mesasOcupada {
