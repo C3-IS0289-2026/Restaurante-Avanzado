@@ -37,7 +37,55 @@ test('Servidor API - Health Check y Metadatos de Estados', async (t) => {
   assert.equal(estadosData.secuenciaPaso['En Preparación'], 'Listo para Servir');
   assert.equal(estadosData.secuenciaPaso['Listo para Servir'], 'Entregado');
 
-  // 3. Ruta no encontrada 404
+  // 3. Endpoint Ingredientes / Inventario (GET y POST)
+  const mockCreatedIng = { id: 99, nombre: 'Pimentón', unidad_medida: 'gramos', stock_actual: 0, punto_reorden: 250 };
+  const mockIngredienteService = {
+    async getAll() {
+      return [mockCreatedIng];
+    },
+    async create(data) {
+      return { id: 100, ...data };
+    }
+  };
+
+  const customContainer = {
+    ...server.container,
+    services: {
+      ingredienteService: mockIngredienteService
+    },
+    ingredienteService: mockIngredienteService
+  };
+
+  const customServer = createServer({ container: customContainer });
+  await new Promise((resolve) => customServer.listen(0, resolve));
+  const customUrl = `http://127.0.0.1:${customServer.address().port}`;
+
+  t.after(() => {
+    customServer.close();
+  });
+
+  const getIngRes = await fetch(`${customUrl}/api/ingredientes`);
+  assert.equal(getIngRes.status, 200);
+  const getIngData = await getIngRes.json();
+  assert.equal(getIngData.success, true);
+  assert.equal(getIngData.count, 1);
+
+  const postIngRes = await fetch(`${customUrl}/api/ingredientes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombre: 'Pimentón',
+      unidad_medida: 'gramos',
+      punto_reorden: 250
+    })
+  });
+  assert.equal(postIngRes.status, 201);
+  const postIngData = await postIngRes.json();
+  assert.equal(postIngData.success, true);
+  assert.equal(postIngData.data.nombre, 'Pimentón');
+  assert.equal(postIngData.data.punto_reorden, 250);
+
+  // 4. Ruta no encontrada 404
   const notFoundRes = await fetch(`${baseUrl}/api/ruta-inexistente`);
   assert.equal(notFoundRes.status, 404);
 });

@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend API (server.js)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/infrastructure/api/server.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Ejecutar Todas las Pruebas (Debug)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/.bin/node",
+      "runtimeArgs": ["--test", "test/**/*.test.js"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Archivo de Prueba Actual",
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": ["--test", "${file}"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Script: Check Low Stock",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/scripts/check-low-stock.js",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
+

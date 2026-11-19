@@ -2,6 +2,7 @@ import http from 'node:http';
 import { URL } from 'node:url';
 import dotenv from 'dotenv';
 import { handleSolicitudesRoutes } from './routes/solicitudesRoutes.js';
+import { handleIngredientesRoutes } from './routes/ingredientesRoutes.js';
 import { DomainError } from '../../domain/exceptions/DomainErrors.js';
 import { defaultContainer } from '../container.js';
 
@@ -95,7 +96,7 @@ export function createServer({ container = defaultContainer } = {}) {
       const body = await parseJsonBody(req);
 
       // Despachar a rutas de solicitudes
-      const handled = await handleSolicitudesRoutes(
+      let handled = await handleSolicitudesRoutes(
         req,
         res,
         {
@@ -107,6 +108,22 @@ export function createServer({ container = defaultContainer } = {}) {
         },
         container
       );
+
+      // Despachar a rutas de ingredientes / inventario si no fue manejada
+      if (!handled && !res.writableEnded) {
+        handled = await handleIngredientesRoutes(
+          req,
+          res,
+          {
+            path,
+            method,
+            query,
+            params: {},
+            body
+          },
+          container
+        );
+      }
 
       if (!handled && !res.writableEnded) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
