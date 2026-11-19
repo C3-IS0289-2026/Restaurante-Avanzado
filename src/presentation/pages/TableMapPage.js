@@ -19,9 +19,9 @@ export class TableMapPage extends BaseComponent {
 
     <h2 id="tituloMesa">Información de mesa</h2>
 
-    <p id="infomesero"></p>
     <p id="estadoMesa"></p>
     <p id="personasMesa"></p>
+    <p id="infomesero"></p>
     <p id="horaMesa"></p>
 
     <button id="abrirMesa" type="button" disabled>
@@ -62,7 +62,7 @@ export class TableMapPage extends BaseComponent {
     <p id="mesaFormulario"></p>
 
     <label for="numeroPersonas">
-      Número de personas:
+      Comensales:
     </label>
 
     <input
@@ -85,6 +85,8 @@ export class TableMapPage extends BaseComponent {
   <option value="1">Ruben Var</option>
   <option value="2">Raquel Sian</option>
   </select>
+<br>
+<br>
 
     <button type="submit">
       Confirmar apertura
@@ -97,8 +99,8 @@ export class TableMapPage extends BaseComponent {
   </form>
 </dialog>
       `
-    
-    ;
+
+      ;
   }
 
 
@@ -112,15 +114,15 @@ function mostrarMesa(pagina, mesa) {
 
   pagina.querySelector('#estadoMesa').textContent =
     ocupada ? 'Estado: Ocupada' : 'Estado: Libre';
-    
-    pagina.querySelector('#infomesero').textContent = mesa.dataset.mesero? `Mesero: ${mesa.dataset.mesero}`
-    : 'Sin personas registradas';
+
+  pagina.querySelector('#infomesero').textContent = mesa.dataset.mesero ? `Mesero: ${mesa.dataset.mesero}`
+    : '';
 
 
   pagina.querySelector('#personasMesa').textContent =
     mesa.dataset.personas
-      ? `Personas: ${mesa.dataset.personas}`
-      : 'Sin personas registradas';
+      ? `Comensales: ${mesa.dataset.personas}`
+      : '';
 
   pagina.querySelector('#horaMesa').textContent =
     mesa.dataset.hora
@@ -149,11 +151,11 @@ document.addEventListener('click', (event) => {
 
     // Mostrar la información del recuadro
     pagina.querySelector('#infoMesa').hidden = false;
-    
+
     // Actualizar los datos
     mostrarMesa(pagina, mesa);
-    
-    return;  
+
+    return;
   }
 
   // ABRIR FORMULARIO
@@ -164,7 +166,7 @@ document.addEventListener('click', (event) => {
     );
 
     if (!seleccionada ||
-        seleccionada.classList.contains('mesasOcupada')) {
+      seleccionada.classList.contains('mesasOcupada')) {
       return;
     }
 
@@ -185,17 +187,17 @@ document.addEventListener('click', (event) => {
 
 });
 document.addEventListener('submit', (event) => {
-  
+
   if (!event.target.matches(
     '.table-map-page #formAbrirMesa'
   )) return;
-  
+
   event.preventDefault();
-  
+
   const formulario = event.target;
   const pagina = formulario.closest('.table-map-page');
   const dialogo = pagina.querySelector('#dialog');
-  
+
   const id = dialogo.dataset.mesaId;
 
   const mesa = Array.from(
@@ -217,7 +219,7 @@ document.addEventListener('submit', (event) => {
     alert('La mesa ya está ocupada');
     return;
   }
-  
+
   const selectMesero = pagina.querySelector('#mesero');
   const nombreMesero = selectMesero.options[selectMesero.selectedIndex].text;
 
@@ -228,7 +230,7 @@ document.addEventListener('submit', (event) => {
   mesa.dataset.personas = String(personas);
 
   mesa.dataset.hora = new Date().toLocaleTimeString('es-CO');
-  
+
   // Cambiar el estado visual
   mesa.classList.remove('mesasLibre');
   mesa.classList.add('mesasOcupada');
