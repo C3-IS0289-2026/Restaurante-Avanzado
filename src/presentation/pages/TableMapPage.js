@@ -19,6 +19,7 @@ export class TableMapPage extends BaseComponent {
 
     <h2 id="tituloMesa">Información de mesa</h2>
 
+    <p id="infomesero"></p>
     <p id="estadoMesa"></p>
     <p id="personasMesa"></p>
     <p id="horaMesa"></p>
@@ -71,6 +72,19 @@ export class TableMapPage extends BaseComponent {
       step="1"
       required
     >
+    <label for="meseros">
+      Seleccionar mesero:
+    </label>
+
+    <select
+      id="mesero"
+      name="mesero"
+      required
+    >
+    <option value="">-- Elige un mesero --</option>
+  <option value="1">Ruben Var</option>
+  <option value="2">Raquel Sian</option>
+  </select>
 
     <button type="submit">
       Confirmar apertura
@@ -98,6 +112,10 @@ function mostrarMesa(pagina, mesa) {
 
   pagina.querySelector('#estadoMesa').textContent =
     ocupada ? 'Estado: Ocupada' : 'Estado: Libre';
+    
+    pagina.querySelector('#infomesero').textContent = mesa.dataset.mesero? `Mesero: ${mesa.dataset.mesero}`
+    : 'Sin personas registradas';
+
 
   pagina.querySelector('#personasMesa').textContent =
     mesa.dataset.personas
@@ -167,17 +185,17 @@ document.addEventListener('click', (event) => {
 
 });
 document.addEventListener('submit', (event) => {
-
+  
   if (!event.target.matches(
     '.table-map-page #formAbrirMesa'
   )) return;
-
+  
   event.preventDefault();
-
+  
   const formulario = event.target;
   const pagina = formulario.closest('.table-map-page');
   const dialogo = pagina.querySelector('#dialog');
-
+  
   const id = dialogo.dataset.mesaId;
 
   const mesa = Array.from(
@@ -199,12 +217,18 @@ document.addEventListener('submit', (event) => {
     alert('La mesa ya está ocupada');
     return;
   }
+  
+  const selectMesero = pagina.querySelector('#mesero');
+  const nombreMesero = selectMesero.options[selectMesero.selectedIndex].text;
 
+  mesa.dataset.mesero = nombreMesero;
+  mesa.dataset.personas = String(personas);
+  mesa.dataset.hora = new Date().toLocaleTimeString('es-CO');
   // Registrar datos de apertura
   mesa.dataset.personas = String(personas);
 
   mesa.dataset.hora = new Date().toLocaleTimeString('es-CO');
-
+  
   // Cambiar el estado visual
   mesa.classList.remove('mesasLibre');
   mesa.classList.add('mesasOcupada');
@@ -215,5 +239,6 @@ document.addEventListener('submit', (event) => {
   // Cerrar formulario
   dialogo.close();
   formulario.reset();
+
 
 });
