@@ -105,7 +105,9 @@ const miMesaService = new MesaService();
 - `deleteByPlatoId(plato_id, client)`: Limpia los ingredientes de un plato.
 - `guardarRecetaCompleta(plato_id, items)`: Reemplaza atómicamente en una transacción todos los insumos del plato.
 
-### 6. `CuentaService` (`cuenta`)
+### 6. `CuentaService` (`cuenta` / enum `estado_cuenta`)
+> **Lenguaje Ubicuo:** La entidad `cuenta` (y su enumerador `estado_cuenta`: `'Abierta'`, `'Pagada'`, `'Cerrada'`) unifica y reemplaza el término antiguo `comanda` / `estado_comanda`. Su secuencia es `cuenta_id_seq`, su PK es `cuenta_pkey` y las tablas `detalle_cuenta`, `pago` y `movimiento_inventario` la referencian mediante la llave foránea `cuenta_id`.
+
 - `create({ mesa_id, mesero_id, numero_comensales, estado, ... }, client)`: Apertura de pedido/cuenta.
 - `getAll({ estado, mesa_id, mesero_id }, client)`: Listado con join a `mesa` y `usuario`.
 - `getById(id, client)`: Obtiene cabecera de cuenta.
@@ -115,7 +117,9 @@ const miMesaService = new MesaService();
 - `cerrarCuenta(id)`: Transaccional: actualiza cuenta a 'Cerrada' con timestamp y libera la mesa (`mesa.estado = 'Libre'`).
 - `getCuentaCompleta(id, client)`: Devuelve cabecera + líneas de detalle + historial de pagos.
 
-### 7. `DetalleCuentaService` (`detalle_cuenta`)
+### 7. `DetalleCuentaService` (`detalle_cuenta` / enum `estado_detalle_cuenta`)
+> **Lenguaje Ubicuo:** La entidad `detalle_cuenta` y su enumerador `estado_detalle_cuenta` (`'Enviado a Cocina'`, `'En Preparación'`, `'Listo para Servir'`, `'Entregado'`, `'Cancelado'`) reemplazan las denominaciones previas `detalle_comanda` y `estado_detalle_comanda`. Su secuencia es `detalle_cuenta_id_seq` y su PK es `detalle_cuenta_pkey`.
+
 - `create({ cuenta_id, plato_id, cantidad, notas, estado, ... }, client)`: Agrega pedido a la cuenta.
 - `getAll({ cuenta_id, plato_id, estado }, client)`: Lista pedidos con datos de plato y total línea.
 - `getById(id, client)`: Detalle individual.

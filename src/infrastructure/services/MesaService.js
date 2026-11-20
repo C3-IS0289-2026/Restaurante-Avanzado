@@ -44,18 +44,19 @@ export class MesaService extends BaseService {
   }
 
   /**
-   * Obtiene todas las mesas con filtro opcional por estado
-   * @param {Object} [filters={}]
-   * @param {'Libre'|'Ocupada'|'Reservada'} [filters.estado]
+   * Obtiene todas las mesas con filtro opcional por estado (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {'Libre'|'Ocupada'|'Reservada'} [options.estado]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ estado } = {}, client = null) {
-    const where = {};
-    if (estado) {
-      where.estado = estado;
-    }
-    return super.getAll({ where, orderBy: 'numero ASC' }, client);
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(options, 'numero ASC');
+    return super.getAll({ where: filters, orderBy, limit, offset }, client);
   }
 
   /**

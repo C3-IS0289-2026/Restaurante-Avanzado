@@ -1,11 +1,12 @@
-export class InventoryForm {
+import { BaseComponent } from './BaseComponent.js';
+
+export class InventoryForm extends BaseComponent {
   constructor() {
-    this.element = document.createElement('div');
-    this.element.className = 'inventory-form';
+    super('div', 'inventory-form');
   }
 
-  render() {
-    this.element.innerHTML = `
+  template() {
+    return `
       <h2>Gestionar Ingrediente</h2>
       <form id="invForm">
         <label>Nombre:</label>
@@ -20,6 +21,5 @@ export class InventoryForm {
         <button type="submit">Guardar</button>
       </form>
     `;
-    return this.element;
   }
 }

@@ -27,7 +27,7 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
 ---
 
 ## Sprint 2: Lógica Backend Inicial y Conexiones (9 Tareas)
-**Objetivo:** Dotar de lógica a la creación de comandas, persistencia de menús y estados base.
+**Objetivo:** Dotar de lógica a la creación de cuentas y detalles de cuenta, persistencia de menús y estados base.
 * **DouCiv:**
   * HU-001.2: Conectar mapa de mesas con el backend para estado en tiempo real
   * HU-002.2: Lógica para registrar hora de apertura y asignar mesero
@@ -46,21 +46,21 @@ Se ha reasignado la tarea **HU-010.3** a David3560 para balancear la carga técn
 
 ---
 
-## Sprint 3: Tiempo Real, KDS y Comandas (9 Tareas)
+## Sprint 3: Tiempo Real, KDS y Cuentas / Pedidos (9 Tareas)
 **Objetivo:** Lograr la comunicación fluida del salón con cocina, enviando pedidos al KDS.
 * **DouCiv:**
   * HU-001.3: Diferenciar colores de mesas por estado (Libre, Ocupada)
   * HU-002.3: Validación de mesa ya ocupada
 * **DiaxJF:**
-  * HU-003.4: Envío de la comanda al backend y KDS
+  * HU-003.4: Envío del detalle de cuenta (solicitud) al backend y KDS
 * **juanpaocampo45:**
-  * HU-005.2: Recepción en tiempo real de nuevas comandas
-  * HU-006.2: Lógica backend para actualizar estado de la comanda
+  * HU-005.2: Recepción en tiempo real de nuevas solicitudes de cuenta
+  * HU-006.2: Lógica backend para actualizar estado del detalle de cuenta (`estado_detalle_cuenta`)
 * **juan4298jose:**
   * HU-007.1: Sistema base para emitir notificaciones push/web al mesero
 * **Bree-zzz1:**
   * HU-009.4: Control de porciones y cálculo de costo teórico
-  * HU-010.1: Lógica para enlazar comanda con ingredientes de receta
+  * HU-010.1: Lógica para enlazar cuenta / detalle de cuenta con ingredientes de receta
 * **David3560:**
   * HU-011.3: UI de dashboard para productos en alerta de stock
 

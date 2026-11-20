@@ -34,25 +34,33 @@ export class RecetaIngredienteService extends BaseService {
   }
 
   /**
-   * Obtiene asociaciones de recetas con información detallada de plato e ingrediente
-   * @param {Object} [filters={}]
-   * @param {number} [filters.plato_id]
-   * @param {number} [filters.ingrediente_id]
+   * Obtiene asociaciones de recetas con información detallada de plato e ingrediente (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {number} [options.plato_id]
+   * @param {number} [options.ingrediente_id]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ plato_id, ingrediente_id } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'p.nombre ASC, i.nombre ASC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (plato_id) {
+    if (filters.plato_id) {
       clauses.push(`r."plato_id" = $${paramIndex++}`);
-      values.push(plato_id);
+      values.push(filters.plato_id);
     }
-    if (ingrediente_id) {
+    if (filters.ingrediente_id) {
       clauses.push(`r."ingrediente_id" = $${paramIndex++}`);
-      values.push(ingrediente_id);
+      values.push(filters.ingrediente_id);
     }
 
     let sql = `
@@ -75,7 +83,17 @@ export class RecetaIngredienteService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY p.nombre ASC, i.nombre ASC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;

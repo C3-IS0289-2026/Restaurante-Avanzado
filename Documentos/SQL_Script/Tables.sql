@@ -1,9 +1,9 @@
 -- Enums
 CREATE TYPE estado_mesa AS ENUM ('Libre', 'Ocupada', 'Reservada');
 CREATE TYPE rol_usuario AS ENUM ('Mesero', 'Cocinero', 'Cajero', 'Administrador');
-CREATE TYPE categoria_platillo AS ENUM ('Entradas', 'Platos Fuertes', 'Bebidas', 'Postres', 'Otros');
-CREATE TYPE estado_comanda AS ENUM ('Abierta', 'Pagada', 'Cerrada');
-CREATE TYPE estado_detalle_comanda AS ENUM ('Enviado a Cocina', 'En Preparación', 'Listo para Servir', 'Entregado', 'Cancelado');
+CREATE TYPE categoria_plato AS ENUM ('Entradas', 'Platos Fuertes', 'Bebidas', 'Postres', 'Otros');
+CREATE TYPE estado_cuenta AS ENUM ('Abierta', 'Pagada', 'Cerrada');
+CREATE TYPE estado_detalle_cuenta AS ENUM ('Enviado a Cocina', 'En Preparación', 'Listo para Servir', 'Entregado', 'Cancelado');
 CREATE TYPE metodo_pago AS ENUM ('Efectivo', 'Tarjeta', 'Otro');
 CREATE TYPE tipo_movimiento AS ENUM ('Ingreso', 'Deducción por Venta', 'Merma/Ajuste');
 CREATE TYPE tipo_notificacion AS ENUM ('Platillo Listo', 'Alerta Stock Mínimo');
@@ -26,12 +26,12 @@ CREATE TABLE usuario (
     activo BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE platillo (
+CREATE TABLE plato (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10, 2) NOT NULL,
     descripcion TEXT,
-    categoria categoria_platillo NOT NULL,
+    categoria categoria_plato NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT true
 );
 
@@ -45,17 +45,17 @@ CREATE TABLE ingrediente (
 
 CREATE TABLE receta_ingrediente (
     id SERIAL PRIMARY KEY,
-    platillo_id INT NOT NULL REFERENCES platillo(id) ON DELETE CASCADE,
+    plato_id INT NOT NULL REFERENCES plato(id) ON DELETE CASCADE,
     ingrediente_id INT NOT NULL REFERENCES ingrediente(id) ON DELETE CASCADE,
     cantidad_requerida DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE comanda (
+CREATE TABLE cuenta (
     id SERIAL PRIMARY KEY,
     mesa_id INT NOT NULL REFERENCES mesa(id) ON DELETE RESTRICT,
     mesero_id INT REFERENCES usuario(id) ON DELETE SET NULL,
     numero_comensales INT NOT NULL,
-    estado estado_comanda NOT NULL DEFAULT 'Abierta',
+    estado estado_cuenta NOT NULL DEFAULT 'Abierta',
     subtotal DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     impuestos DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     total DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
@@ -63,19 +63,19 @@ CREATE TABLE comanda (
     fecha_cierre TIMESTAMP
 );
 
-CREATE TABLE detalle_comanda (
+CREATE TABLE detalle_cuenta (
     id SERIAL PRIMARY KEY,
-    comanda_id INT NOT NULL REFERENCES comanda(id) ON DELETE CASCADE,
-    platillo_id INT NOT NULL REFERENCES platillo(id) ON DELETE RESTRICT,
+    cuenta_id INT NOT NULL REFERENCES cuenta(id) ON DELETE CASCADE,
+    plato_id INT NOT NULL REFERENCES plato(id) ON DELETE RESTRICT,
     cantidad INT NOT NULL,
     notas TEXT,
-    estado estado_detalle_comanda NOT NULL DEFAULT 'Enviado a Cocina',
+    estado estado_detalle_cuenta NOT NULL DEFAULT 'Enviado a Cocina',
     hora_envio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pago (
     id SERIAL PRIMARY KEY,
-    comanda_id INT NOT NULL REFERENCES comanda(id) ON DELETE RESTRICT,
+    cuenta_id INT NOT NULL REFERENCES cuenta(id) ON DELETE RESTRICT,
     metodo_pago metodo_pago NOT NULL,
     monto DECIMAL(10, 2) NOT NULL,
     fecha_pago TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -86,7 +86,7 @@ CREATE TABLE movimiento_inventario (
     ingrediente_id INT NOT NULL REFERENCES ingrediente(id) ON DELETE CASCADE,
     tipo_movimiento tipo_movimiento NOT NULL,
     cantidad DECIMAL(10, 2) NOT NULL,
-    comanda_id INT REFERENCES comanda(id) ON DELETE SET NULL,
+    cuenta_id INT REFERENCES cuenta(id) ON DELETE SET NULL,
     fecha_movimiento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

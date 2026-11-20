@@ -13,7 +13,8 @@ export const ESTADOS_NOTIFICACION = Object.freeze({
 });
 
 /**
- * Servicio de infraestructura para la entidad Notificacion
+ * Servicio de infraestructura para la entidad Notificacion.
+ * Cumple el contrato INotificacionPort requerido por los casos de uso.
  */
 export class NotificacionService extends BaseService {
   constructor(db = defaultPool) {
@@ -60,30 +61,38 @@ export class NotificacionService extends BaseService {
   }
 
   /**
-   * Obtiene notificaciones con filtros y datos del usuario destinatario
-   * @param {Object} [filters={}]
-   * @param {number} [filters.usuario_destino_id]
-   * @param {string} [filters.estado]
-   * @param {string} [filters.tipo]
+   * Obtiene notificaciones con filtros y datos del usuario destinatario (cumple LSP con BaseService)
+   * @param {Object} [options={}]
+   * @param {number} [options.usuario_destino_id]
+   * @param {string} [options.estado]
+   * @param {string} [options.tipo]
+   * @param {Object} [options.where]
+   * @param {string} [options.orderBy]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
    * @param {import('pg').PoolClient} [client=null]
    * @returns {Promise<Array<Object>>}
    */
-  async getAll({ usuario_destino_id, estado, tipo } = {}, client = null) {
+  async getAll(options = {}, client = null) {
+    const { filters, orderBy, limit, offset } = this.normalizeQueryOptions(
+      options,
+      'n.fecha_creacion DESC, n.id DESC'
+    );
     const clauses = [];
     const values = [];
     let paramIndex = 1;
 
-    if (usuario_destino_id) {
+    if (filters.usuario_destino_id) {
       clauses.push(`n."usuario_destino_id" = $${paramIndex++}`);
-      values.push(usuario_destino_id);
+      values.push(filters.usuario_destino_id);
     }
-    if (estado) {
+    if (filters.estado) {
       clauses.push(`n."estado" = $${paramIndex++}`);
-      values.push(estado);
+      values.push(filters.estado);
     }
-    if (tipo) {
+    if (filters.tipo) {
       clauses.push(`n."tipo" = $${paramIndex++}`);
-      values.push(tipo);
+      values.push(filters.tipo);
     }
 
     let sql = `
@@ -98,7 +107,17 @@ export class NotificacionService extends BaseService {
     if (clauses.length > 0) {
       sql += ` WHERE ${clauses.join(' AND ')}`;
     }
-    sql += ' ORDER BY n.fecha_creacion DESC, n.id DESC';
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    if (limit !== null) {
+      sql += ` LIMIT $${paramIndex++}`;
+      values.push(limit);
+    }
+    if (offset !== null) {
+      sql += ` OFFSET $${paramIndex++}`;
+      values.push(offset);
+    }
 
     const { rows } = await this.query(sql, values, client);
     return rows;
@@ -174,6 +193,28 @@ export class NotificacionService extends BaseService {
       mensaje,
       usuario_destino_id: usuarioDestinoId
     }, client);
+  }
+
+  /**
+   * Implementación de INotificacionPort.notifyLowStock para CheckLowStockUseCase
+   * @param {Array<import('../../domain/entities/InventoryItem.js').InventoryItem>} lowStockItems
+   * @param {number} [usuarioDestinoId=null]
+   * @param {import('pg').PoolClient} [client=null]
+   * @returns {Promise<Array<Object>>}
+   */
+  async notifyLowStock(lowStockItems = [], usuarioDestinoId = null, client = null) {
+    const creadas = [];
+    for (const item of lowStockItems) {
+      const notif = await this.crearAlertaStockMinimo(
+        item.name,
+        item.quantity,
+        item.minStock,
+        usuarioDestinoId,
+        client
+      );
+      creadas.push(notif);
+    }
+    return creadas;
   }
 
   /**

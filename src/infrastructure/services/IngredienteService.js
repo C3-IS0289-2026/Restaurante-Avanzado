@@ -1,8 +1,11 @@
 import { BaseService } from './BaseService.js';
+import { InventoryItem } from '../../domain/entities/InventoryItem.js';
 import defaultPool from '../database/connection.js';
 
 /**
- * Servicio de infraestructura para la entidad Ingrediente
+ * Servicio de infraestructura para la entidad Ingrediente.
+ * Implementa tanto las operaciones CRUD de BaseService (IRepository)
+ * como el contrato IInventoryRepository para CheckLowStockUseCase.
  */
 export class IngredienteService extends BaseService {
   constructor(db = defaultPool) {
@@ -43,6 +46,27 @@ export class IngredienteService extends BaseService {
    */
   async getAll(options = {}, client = null) {
     return super.getAll({ orderBy: 'nombre ASC', ...options }, client);
+  }
+
+  /**
+   * Implementación del contrato IInventoryRepository:
+   * Retorna todos los ingredientes mapeados a la entidad de dominio InventoryItem
+   * @param {import('pg').PoolClient} [client=null]
+   * @returns {Promise<Array<InventoryItem>>}
+   */
+  async getAllItems(client = null) {
+    const rows = await this.getAll({}, client);
+    return rows.map(
+      row =>
+        new InventoryItem({
+          id: row.id,
+          name: row.nombre,
+          quantity: Number(row.stock_actual),
+          unit: row.unidad_medida,
+          minStock: Number(row.punto_reorden),
+          cost: 0
+        })
+    );
   }
 
   /**

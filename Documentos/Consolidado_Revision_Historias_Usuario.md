@@ -26,7 +26,7 @@ El presente documento consolida la auditoría, depuración, reasignación y fund
 | Estudiante | Código Estudiantil | Usuario GitHub | Estado en Repositorio | Asignación Módulos / HUs |
 | :--- | :---: | :---: | :---: | :--- |
 | **CRUZ BUITRAGO CRISTIAN DAVID** | 202610009615 | `@DouCiv` | Colaborador Aceptado | **Salón & Mesas:** HU-001 (Mapa de Mesas), HU-002 (Apertura de Mesa) |
-| **MURILLO GUERRERO JUAN FELIPPE** | 202610067615 | `@DiaxJF` | Invitación Pendiente (#338583868) | **Comandas & Caja:** HU-003 (Toma de Pedidos), HU-004 (Cierre de Cuenta) |
+| **MURILLO GUERRERO JUAN FELIPPE** | 202610067615 | `@DiaxJF` | Invitación Pendiente (#338583868) | **Cuentas & Caja:** HU-003 (Toma de Pedidos / Detalle de Cuenta), HU-004 (Cierre de Cuenta) |
 | **OCAMPO RODRIGUEZ JUAN PABLO** | 202610019615 | `@juanpaocampo45` | Colaborador Aceptado | **Cocina (KDS):** HU-005 (Pantalla KDS), HU-006 (Estado de Preparación) |
 | **DÍAZ LÓPEZ JUAN JOSÉ** | 202610018615 | `@juan4298jose` | Colaborador Aceptado | **Notificaciones & Menú:** HU-007 (Notificación Listo), HU-008 (Gestión Menú) |
 | **MORALES BOTÍA BRISA JULIANA** | 202610037615 | `@Bree-zzz1` | Colaboradora Aceptada | **Recetas & Stock:** HU-009 (Recetas), HU-010 (Descuento Automático) |
@@ -58,7 +58,7 @@ Para evitar cruces de código en ramas Git y conflictos en pull requests, se est
           │ (Mesa Abierta)
           ▼
 [ Frontend/API: Pedidos ]    --> @DiaxJF (HU-003, HU-004)
-          │ (Comanda Enviada)
+          │ (Detalle de Cuenta Enviado)
           ▼
 [ Frontend/Socket: KDS ]     --> @juanpaocampo45 (HU-005, HU-006)
           │ (Platillo Listo)
@@ -115,7 +115,7 @@ Para que las historias de usuario guíen efectivamente el desarrollo sin ambigü
     - *Dado* que una mesa está en verde (Libre), *cuando* el mesero pulsa "Abrir" e ingresa comensales (> 0), *entonces* la mesa pasa a "Ocupada" y se crea un registro de orden activa.
     - *Dado* que dos meseros intentan abrir la misma mesa en paralelo, *entonces* el segundo recibe un error 409 (Conflicto / Mesa ya ocupada).
 
-#### HU-003: Toma de Pedidos (Comanda)
+#### HU-003: Toma de Pedidos (Detalle de Cuenta)
 * **Asignado a:** `@DiaxJF` (MURILLO GUERRERO JUAN FELIPPE)
 * **Historia:** *Como Mesero, quiero agregar platillos del menú a la cuenta de una mesa abierta, para poder enviar la orden a cocina y registrar el consumo de los clientes.*
 * **Criterios de Aceptación (INVEST):**
@@ -126,22 +126,22 @@ Para que las historias de usuario guíen efectivamente el desarrollo sin ambigü
   - **S:** Atomizada en catálogo por categoría, carrito interactivo, notas/modificadores y emisión al backend.
   - **T (Pruebas):**
     - *Dado* un platillo seleccionado, *cuando* se presiona "+", *entonces* se agrega a la lista temporal de la mesa con subtotal recalculado en tiempo real.
-    - *Dado* un ítem con notas especiales ("sin cebolla"), *cuando* se confirma el pedido, *entonces* la comanda se persiste con los modificadores intactos y estado "Enviado a Cocina".
+    - *Dado* un ítem con notas especiales ("sin cebolla"), *cuando* se confirma el pedido, *entonces* el detalle de cuenta (`detalle_cuenta`) se persiste con los modificadores intactos y estado "Enviado a Cocina" (`estado_detalle_cuenta`).
 
 #### HU-004: Cierre de Cuenta y Pago
 * **Asignado a:** `@DiaxJF` (MURILLO GUERRERO JUAN FELIPPE)
 * **Historia:** *Como Cajero / Mesero, quiero visualizar el total consumido por una mesa y procesar su pago, para cobrar correctamente a los clientes y liberar la mesa para nuevos comensales.*
 * **Criterios de Aceptación (INVEST):**
-  - **I:** Depende únicamente de una comanda activa existente.
+  - **I:** Depende únicamente de una cuenta activa existente (`cuenta`).
   - **N:** Los métodos de pago admitidos (Efectivo, Tarjeta, Mixto) se ajustan al MVP.
   - **V:** Cierre financiero del servicio y rotación de mesas.
   - **E:** Estimación media (cálculo de impuestos, propina opcional y división de cuentas).
   - **S:** Segmentada en resumen/desglose, división de cuenta, registro de medio de pago y liberación de mesa.
   - **T (Pruebas):**
     - *Dado* el pedido de la mesa, *entonces* la suma de ítems + IVA coincide exactamente con el monto final.
-    - *Dado* un pago confirmado con éxito, *entonces* la comanda pasa a 'Cerrada' y la mesa correspondiente cambia inmediatamente a estado 'Libre'.
+    - *Dado* un pago confirmado con éxito, *entonces* la cuenta (`cuenta`) pasa a 'Cerrada' (`estado_cuenta`) y la mesa correspondiente cambia inmediatamente a estado 'Libre'.
 
-#### HU-005: Pantalla de Recepción de Comandas (KDS)
+#### HU-005: Pantalla de Recepción de Pedidos / Detalles de Cuenta (KDS)
 * **Asignado a:** `@juanpaocampo45` (OCAMPO RODRIGUEZ JUAN PABLO)
 * **Historia:** *Como Cocinero, quiero ver una pantalla con las órdenes entrantes organizadas por tiempo de llegada, para saber qué platillos debo preparar a continuación y optimizar los tiempos.*
 * **Criterios de Aceptación (INVEST):**
@@ -154,12 +154,12 @@ Para que las historias de usuario guíen efectivamente el desarrollo sin ambigü
     - *Dado* un nuevo pedido enviado por mesero, *entonces* aparece un nuevo ticket en la columna "Pendiente" sin recarga.
     - *Dado* varios tickets activos, *entonces* el ticket más antiguo (mayor tiempo de espera) se ubica en primera posición y cambia a color de advertencia si supera 15 minutos.
 
-#### HU-006: Actualización de Estado de Preparación
+#### HU-006: Actualización de Estado de Preparación (`estado_detalle_cuenta`)
 * **Asignado a:** `@juanpaocampo45` (OCAMPO RODRIGUEZ JUAN PABLO)
 * **Historia:** *Como Cocinero, quiero cambiar el estado de los platillos a "En Preparación" y luego a "Listo para Servir", para notificar al salón que la orden avanza o ya puede ser recogida.*
 * **Criterios de Aceptación (INVEST):**
   - **I:** Opera sobre el ticket cargado en la vista KDS.
-  - **N:** Botones individuales por platillo vs. botón por comanda completa.
+  - **N:** Botones individuales por platillo vs. botón por cuenta completa.
   - **V:** Visibilidad del flujo de producción para todo el personal.
   - **E:** Estimación media (validación de máquina de estados).
   - **S:** Botones de cambio de estado, endpoints de actualización, reactividad KDS y validaciones de estados prohibidos.
@@ -191,13 +191,13 @@ Para que las historias de usuario guíen efectivamente el desarrollo sin ambigü
   - **S:** Formulario de creación, tabla/listado con filtros, modal de edición y soft delete.
   - **T (Pruebas):**
     - *Dado* un nuevo platillo ingresado con nombre, precio > 0 y categoría, *entonces* se guarda y figura en el menú.
-    - *Dado* un platillo eliminado mediante "Soft Delete", *entonces* su bandera `activo` pasa a `false` y ya no se lista para toma de pedidos, pero no corrompe comandas históricas.
+    - *Dado* un platillo eliminado mediante "Soft Delete", *entonces* su bandera `activo` pasa a `false` y ya no se lista para toma de pedidos, pero no corrompe cuentas históricas.
 
 #### HU-009: Receta de Platillos
 * **Asignado a:** `@Bree-zzz1` (MORALES BOTÍA BRISA JULIANA)
 * **Historia:** *Como Administrador / Chef, quiero asociar una receta con ingredientes y cantidades específicas a cada platillo, para vincular correctamente las ventas con el control de inventario.*
 * **Criterios de Aceptación (INVEST):**
-  - **I:** Enlace entre `menu_items` e `ingredients` mediante tabla intermedia `recipes`.
+  - **I:** Enlace entre `plato` e `ingrediente` mediante tabla intermedia `receta_ingrediente`.
   - **N:** Unidades métricas aceptadas (gramos, mililitros, unidades).
   - **V:** Pilar fundamental para el costeo de platos y reducción automática de inventario.
   - **E:** Estimación media (manejo de relaciones 1:N y conversiones métricas).
@@ -210,11 +210,11 @@ Para que las historias de usuario guíen efectivamente el desarrollo sin ambigü
 * **Asignado a:** `@Bree-zzz1` (MORALES BOTÍA BRISA JULIANA) (con apoyo en HU-010.3 de `@David3560`)
 * **Historia:** *Como Sistema, quiero descontar automáticamente los ingredientes del inventario cuando una orden avanza de estado, para mantener las existencias físicas sincronizadas con el software sin intervención manual.*
 * **Criterios de Aceptación (INVEST):**
-  - **I:** Lógica de backend vinculada a eventos de comanda (`ORDER_CONFIRMED`).
+  - **I:** Lógica de backend vinculada a eventos de cuenta / detalle de cuenta (`ORDER_CONFIRMED`).
   - **N:** Momento del descuento (al enviar a cocina vs. al cerrar cuenta).
   - **V:** Elimina descuadres manuales de bodega y mermas no detectadas.
   - **E:** Estimación alta (transaccionalidad ACID para evitar bloqueos y condiciones de carrera).
-  - **S:** Enlace comanda-receta, cálculo deductivo de stock, manejo de quiebres de stock y auditoría de movimientos.
+  - **S:** Enlace cuenta-receta, cálculo deductivo de stock, manejo de quiebres de stock y auditoría de movimientos.
   - **T (Pruebas):**
     - *Dado* un plato vendido que requiere 200g de carne, *cuando* se confirma la orden, *entonces* el stock de carne disminuye exactamente 200g y se genera un registro en `inventory_movements`.
     - *Dado* que el stock disponible es menor al requerido, *entonces* se dispara la excepción de stock insuficiente controlada por HU-010.3.
@@ -256,12 +256,12 @@ Se definió un cronograma de **5 Sprints** iterativos de 8 a 9 tareas atómicas 
 │ • Bree-zzz1:    HU-009.3 (Visor de Recetas para Cocina)                   │
 │ • David3560:    HU-011.2 (Trigger/Evaluador de Inventario)                │
 ├───────────────────────────────────────────────────────────────────────────┤
-│ SPRINT 3: Tiempo Real, KDS y Comandas (9 tareas)                          │
+│ SPRINT 3: Tiempo Real, KDS y Cuentas / Pedidos (9 tareas)                 │
 │ • DouCiv:       HU-001.3 (Semáforo Mesas), HU-002.3 (Validación Ocupada)  │
-│ • DiaxJF:       HU-003.4 (Envío Comanda a KDS)                            │
+│ • DiaxJF:       HU-003.4 (Envío Detalle de Cuenta a KDS)                  │
 │ • juanpaocampo: HU-005.2 (Tiempo Real KDS), HU-006.2 (Backend Estados)    │
 │ • juan4298jose: HU-007.1 (Servicio Eventos Notificaciones)               │
-│ • Bree-zzz1:    HU-009.4 (Cálculo Costos), HU-010.1 (Enlace Comanda-Stock)│
+│ • Bree-zzz1:    HU-009.4 (Cálculo Costos), HU-010.1 (Enlace Cuenta-Stock) │
 │ • David3560:    HU-011.3 (Dashboard de Insumos Críticos)                  │
 ├───────────────────────────────────────────────────────────────────────────┤
 │ SPRINT 4: Cierre, Notificaciones e Inventario (9 tareas)                  │

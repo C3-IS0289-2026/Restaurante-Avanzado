@@ -1,11 +1,12 @@
-export class RecipeBuilder {
+import { BaseComponent } from './BaseComponent.js';
+
+export class RecipeBuilder extends BaseComponent {
   constructor() {
-    this.element = document.createElement('div');
-    this.element.className = 'recipe-builder';
+    super('div', 'recipe-builder');
   }
 
-  render() {
-    this.element.innerHTML = `
+  template() {
+    return `
       <h3>Construir Receta</h3>
       <div class="ingredient-search">
         <input type="text" placeholder="Buscar ingrediente...">
@@ -21,6 +22,5 @@ export class RecipeBuilder {
         <!-- Ingredientes añadidos renderizarán aquí -->
       </ul>
     `;
-    return this.element;
   }
 }

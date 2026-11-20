@@ -1,11 +1,12 @@
-export class OrderTakingPage {
+import { BaseComponent } from '../components/BaseComponent.js';
+
+export class OrderTakingPage extends BaseComponent {
   constructor() {
-    this.container = document.createElement('div');
-    this.container.className = 'order-taking-page';
+    super('div', 'order-taking-page');
   }
 
-  render() {
-    this.container.innerHTML = `
+  template() {
+    return `
       <div class="sidebar" id="categorySidebar">
         <!-- MenuCategoryList renderizará aquí -->
       </div>
@@ -16,6 +17,5 @@ export class OrderTakingPage {
         </div>
       </div>
     `;
-    return this.container;
   }
 }
