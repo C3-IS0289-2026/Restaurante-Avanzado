@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import RecetaRepositorio from "../infrastructure/RecetaRepositorio.js";
-import CrearReceta from "../application/CrearReceta.js";
+import CrearReceta from "../application/use-cases/CrearReceta.js";
 import RecetaController from "./components/RecetaController.js";
 
 const router = Router();

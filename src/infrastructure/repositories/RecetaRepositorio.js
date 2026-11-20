@@ -33,53 +33,53 @@ export class RecetaRepositorio {
         const dato = resultado.rows[0];
 
         return new Ingrediente(
-            dato.id,
-            dato.nombre,
-            dato.unidad_medida,
-            Number(dato.costo_unitario)
-        );
+        resultado.id,
+        resultado.nombre,
+        resultado.unidad_medida,
+        resultado.costo_unitario
+);
 
     }
 
+    
     async guardar(receta) {
 
-        const conexion = await conexionBD.connect();
+    const client = await conexionBD.connect();
 
-        try {
+    try {
 
-            await conexion.query("BEGIN");
+        await client.query('BEGIN');
 
-            for (const item of receta.ingredientes) {
+        for (const ingrediente of receta.ingredients) {
 
-                const consulta = `
-                    INSERT INTO receta_ingrediente
-                    (plato_id, ingrediente_id, cantidad, unidad)
-                    VALUES ($1, $2, $3, $4)
-                `;
-
-                await conexion.query(consulta, [
-                    receta.platoId,
-                    item.ingrediente.id,
-                    item.cantidad,
-                    item.unidad
-                ]);
-
-            }
-
-            await conexion.query("COMMIT");
-
-        } catch (error) {
-
-            await conexion.query("ROLLBACK");
-
-            throw error;
-
-        } finally {
-
-            conexion.release();
+            await client.query(
+                `INSERT INTO receta_ingrediente
+                (plato_id, ingrediente_id, cantidad, unidad)
+                VALUES ($1, $2, $3, $4)`,
+                [
+                    receta.dishId,
+                    ingrediente.ingredientId,
+                    ingrediente.quantity,
+                    ingrediente.unit
+                ]
+            );
 
         }
 
+        await client.query('COMMIT');
+
+    } catch (error) {
+
+        await client.query('ROLLBACK');
+        throw error;
+
+    } finally {
+
+        client.release();
+
+    }
+}
+
+
     }
 
-}
