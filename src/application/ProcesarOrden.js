@@ -29,4 +29,4 @@ export class ProcesarOrdenConfirmada {
             mensaje: "Inventario actualizado correctamente."
         };
     }
-}git merge origin/main
+}
